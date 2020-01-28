@@ -9,6 +9,15 @@ class _AuthenState extends State<Authen> {
   // Field
 
   // Method
+  
+
+  Widget userForm() {
+    return Container(
+      child: TextField(),
+      width: 250.0,
+    );
+  }
+
   Widget showLogo() {
     return Container(
       child: Image.asset('images/logo.png'),
@@ -17,7 +26,14 @@ class _AuthenState extends State<Authen> {
   }
 
   Widget showAppName() {
-    return Text('poytraining');
+    return Text(
+      'poytraining',
+      style: TextStyle(
+          fontSize: 20,
+          color: Colors.red.shade900,
+          fontWeight: FontWeight.bold,
+          fontStyle: FontStyle.italic),
+    );
   }
 
   @override
@@ -29,6 +45,8 @@ class _AuthenState extends State<Authen> {
           children: <Widget>[
             showLogo(),
             showAppName(),
+            userForm(),
+            userForm(),
           ],
         ),
       ),
