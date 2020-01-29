@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:poytraining/utility/my_constant.dart';
 import 'package:poytraining/utility/my_style.dart';
 import 'package:poytraining/utility/normal_dialog.dart';
 
@@ -165,8 +167,34 @@ class _RegisterState extends State<Register> {
     );
   }
 
-  Future<void> processUploadAvatar()async{
+  Future<void> processUploadAvatar() async {
+    try {
+      Map<String, dynamic> map = Map();
+      map['file'] = UploadFileInfo(file, '$name.jpg');
+      FormData formData = FormData.from(map);
 
+      await Dio()
+          .post(MyConstant().urlAPIsaveFile, data: formData)
+          .then((response) {
+        print('Response = $response');
+        processInserDatabase();
+        //Map valueMap = json.decode(response.toString());
+        //normalDialog(context, valueMap['status'], valueMap['message']);
+      });
+    } catch (e) {}
+  }
+
+  Future<void> processInserDatabase() async {
+    String avatar = 'https://www.androidthai.in.th/pte/avatarPoyd/$name.jpg';
+    String url = 'https://www.androidthai.in.th/pte/addUserPoy.php?isAdd=true&name=$name&user=$user&password=$password&avatar=$avatar';
+
+    await Dio().get(url).then((response) {
+      if (response.toString() == 'true') {
+        Navigator.of(context).pop();
+      } else {
+        normalDialog(context, 'Register False', 'Please try again');
+      }
+    });
   }
 
   @override

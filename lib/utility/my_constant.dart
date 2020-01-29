@@ -1,6 +1,7 @@
 class MyConstant {
   
-  String urlApiSaveFile = 'https://www.androidthai.in.th/pte/saveFilePoy.php';
+  String urlAPIsaveFile = 'https://www.androidthai.in.th/pte/saveFilePoy.php';
+
   
   MyConstant();
 
