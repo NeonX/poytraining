@@ -1,6 +1,12 @@
+import 'dart:convert';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:poytraining/models/user_model.dart';
+import 'package:poytraining/screens/my_service.dart';
 import 'package:poytraining/screens/register.dart';
 import 'package:poytraining/utility/my_style.dart';
+import 'package:poytraining/utility/normal_dialog.dart';
 
 class Authen extends StatefulWidget {
   @override
@@ -9,6 +15,7 @@ class Authen extends StatefulWidget {
 
 class _AuthenState extends State<Authen> {
   // Field
+  String user, password;
 
   // Method
 
@@ -21,8 +28,51 @@ class _AuthenState extends State<Authen> {
           color: Colors.white,
         ),
       ),
-      onPressed: () {},
+      onPressed: () {
+        if (user == null ||
+            user.isEmpty ||
+            password == null ||
+            password.isEmpty) {
+          normalDialog(context, 'Have space', 'Please fill Userand Password');
+        } else {
+          checkAuthen();
+        }
+      },
     );
+  }
+
+  Future<void> checkAuthen() async {
+    String url =
+        'https://www.androidthai.in.th/pte/getUserWhereUserPoy.php?isAdd=true&user=$user';
+
+    Response response = await Dio().get(url);
+    print('Response is $response');
+    if (response.toString() == 'null') {
+      normalDialog(context, 'User False', 'No User \'$user\' in database');
+    } else {
+      var result = json.decode(response.data);
+
+      print('Result is $result');
+
+      for (var map in result) {
+        UserModel userModel = UserModel.fromMap(map);
+
+        if (userModel.password == password) {
+          print('Welcome ${userModel.name}');
+
+          //MaterialPageRoute materialPageRoute = MaterialPageRoute(builder: (BuildContext context) { return MyService(); });
+
+          MaterialPageRoute materialPageRoute =
+              MaterialPageRoute(builder: (BuildContext context) => MyService());
+          Navigator.of(context).pushAndRemoveUntil(materialPageRoute,
+              (Route<dynamic> route) {
+            return false;
+          });
+        } else {
+          normalDialog(context, 'Password False', 'Please try again');
+        }
+      }
+    }
   }
 
   Widget signUpButton() {
@@ -57,6 +107,10 @@ class _AuthenState extends State<Authen> {
   Widget userPassword() {
     return Container(
       child: TextField(
+        onChanged: (String string) {
+          password = string.trim();
+        },
+        obscureText: true,
         decoration: InputDecoration(
             focusedBorder: UnderlineInputBorder(
                 borderSide: BorderSide(color: Colors.yellow.shade600)),
@@ -78,6 +132,9 @@ class _AuthenState extends State<Authen> {
   Widget userForm() {
     return Container(
       child: TextField(
+        onChanged: (String string) {
+          user = string.trim();
+        },
         decoration: InputDecoration(
             focusedBorder: UnderlineInputBorder(
                 borderSide: BorderSide(color: Colors.yellow.shade600)),
