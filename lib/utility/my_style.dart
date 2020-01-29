@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 class MyStyle {
   Color txtColor = Colors.red.shade900;
   Color mainColor = Color.fromARGB(0xff, 0x74, 0x74, 0x74);
-  Color barColor = Color.fromARGB(0xff, 0x74, 0x74, 0x74);
+  Color barColor = Colors.red.shade900;
 
   TextStyle h1Main = GoogleFonts.exo2(
       textStyle: TextStyle(
